@@ -2,24 +2,33 @@ import fs from "fs";
 import _ from "lodash";
 import path from "path";
 
-export const writeDataToFile = (resultDir, resultFileName, contentToWrite) => {
+export const writeDataToFile = (
+  resultDir,
+  resultFileName,
+  fileType,
+  contentToWrite
+) => {
   try {
     if (!fs.existsSync(resultDir)) {
       fs.mkdirSync(resultDir, { recursive: true });
     }
 
-    const alreadyExists = fs.existsSync(path.join(resultDir, resultFileName));
+    let fileName = resultFileName + fileType;
+    let counter = 1;
+    let alreadyExists;
+    do {
+      alreadyExists = fs.existsSync(path.join(resultDir, fileName));
 
-    fs.writeFileSync(
-      path.join(resultDir, resultFileName),
-      contentToWrite,
-      "utf8"
-    );
-    console.log(
-      `File ${
-        alreadyExists ? "updated" : "written"
-      } successfully. ${resultFileName}`
-    );
+      if (alreadyExists) {
+        fileName = `${resultFileName}_${counter}${fileType}`;
+        counter += 1;
+        continue;
+      }
+
+      fs.writeFileSync(path.join(resultDir, fileName), contentToWrite, "utf8");
+      console.log(`File written successfully. ${fileName}`);
+      break;
+    } while (true);
   } catch (err) {
     throw new Error(`Error writing to file: ${err}`);
   }

@@ -89,7 +89,7 @@ const main = async ({ mode, type, version, versionAfter }) => {
       const { data } = await mainProcess(version, extractor);
       contentToWrite = JSON.stringify(data, null, 2);
       resultDir = path.join(process.cwd(), "results");
-      resultFileName = `${extractor.fileName}_${version}.json`;
+      resultFileName = `${extractor.fileName}_${version}`;
     } else if (mode === "diff") {
       const { data } = await mainProcess(version, extractor);
       const { data: dataAfter } = await mainProcess(versionAfter, extractor);
@@ -97,10 +97,10 @@ const main = async ({ mode, type, version, versionAfter }) => {
 
       contentToWrite = JSON.stringify(diffData, null, 2);
       resultDir = path.join(process.cwd(), "results");
-      resultFileName = `${extractor.fileName}_diff_${version}_vs_${versionAfter}.json`;
+      resultFileName = `${extractor.fileName}_diff_${version}_vs_${versionAfter}`;
     }
 
-    writeDataToFile(resultDir, resultFileName, contentToWrite);
+    writeDataToFile(resultDir, resultFileName, ".json", contentToWrite);
   } catch (err) {
     console.error("Program exited:", err);
   }
