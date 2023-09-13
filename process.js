@@ -26,7 +26,7 @@ const reducePaths = (filePaths, reducer, acc) =>
 
 const process = async (
   axeVersion,
-  { checkReducer, checkAcc, ruleReducer, ruleAcc }
+  { checkReducer, checkAcc, ruleReducer, ruleAcc, postOp }
 ) => {
   await simpleGit(axeCoreDirPath).checkout(axeVersion, (err) => {
     if (err) {
@@ -58,6 +58,10 @@ const process = async (
     );
   } else {
     processedRules = processedChecks;
+  }
+
+  if (postOp) {
+    processedRules = postOp(processedRules, axeVersion);
   }
 
   // necessary to stringify and parse because the IDs have invalid characters

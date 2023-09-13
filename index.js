@@ -27,7 +27,7 @@ const cliOptions = {
   t: {
     alias: "type",
     describe: "type of extraction of axe-core rules and checks",
-    choices: ["complete", "incomplete"],
+    choices: ["complete", "incomplete", "information"],
     default: "complete",
   },
   v: {

@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "lodash": "^4.17.21",
+    "markdown-table": "^3.0.3",
     "simple-git": "^3.19.1",
     "yargs": "^17.7.2"
   }
