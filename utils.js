@@ -26,7 +26,9 @@ export const writeDataToFile = (
       }
 
       fs.writeFileSync(path.join(resultDir, fileName), contentToWrite, "utf8");
-      console.log(`File written successfully. ${fileName}`);
+      console.log(
+        `File written successfully. ${path.join(resultDir, fileName)}`
+      );
       break;
     } while (true);
   } catch (err) {

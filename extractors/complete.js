@@ -17,7 +17,7 @@ const completeRulesReducer = () => (acc, ruleData) => {
   const { all, any, none, reviewOnFail, enabled, tags, metadata } = ruleData;
 
   let ruleInfo = {
-    rule_id: ruleData.id,
+    ruleId: ruleData.id,
     description: metadata.description,
     enabled,
     experimental: tags.includes("experimental") || undefined,

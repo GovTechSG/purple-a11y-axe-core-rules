@@ -39,14 +39,14 @@ const incompleteRulesReducer = (checksMessages) => (acc, ruleData) => {
       .map((checkID) => {
         if (reviewOnFail) {
           return {
-            check_id: checkID,
+            checkId: checkID,
             fail: checksMessages[checkID].fail,
             incomplete: checksMessages[checkID].incomplete,
           };
         }
 
         return {
-          check_id: checkID,
+          checkId: checkID,
           incomplete: checksMessages[checkID].incomplete,
         };
       });
@@ -56,7 +56,7 @@ const incompleteRulesReducer = (checksMessages) => (acc, ruleData) => {
   const pNone = processCheckArray(none);
   if (pAll.length || pAny.length || pNone.length || reviewOnFail) {
     const ruleInfo = {
-      rule_id: ruleData.id,
+      ruleId: ruleData.id,
     };
     if (enabled === false) {
       ruleInfo.enabled = false;

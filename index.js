@@ -62,11 +62,11 @@ const options = yargs(hideBin(process.argv))
     if (mode === "diff") {
       if (!versionAfter) {
         throw new Error(
-          "v2 - versionAfter not provided and is required for diff mode"
+          "a - versionAfter not provided and is required for diff mode"
         );
       } else if (versionAfter === version) {
         throw new Error(
-          `please provide different versions for v and v2, provided: ${version}`
+          `please provide different versions for version and versionAfter, provided: ${version}`
         );
       }
     }
@@ -88,7 +88,7 @@ const main = async ({ mode, type, version, versionAfter }) => {
     if (mode === "extraction") {
       const { data } = await mainProcess(version, extractor);
       contentToWrite = JSON.stringify(data, null, 2);
-      resultDir = path.join(process.cwd(), "results");
+      resultDir = "results";
       resultFileName = `${extractor.fileName}_${version}`;
     } else if (mode === "diff") {
       const { data } = await mainProcess(version, extractor);
@@ -96,7 +96,7 @@ const main = async ({ mode, type, version, versionAfter }) => {
       const diffData = jsonDiff({ version, data, versionAfter, dataAfter });
 
       contentToWrite = JSON.stringify(diffData, null, 2);
-      resultDir = path.join(process.cwd(), "results");
+      resultDir = "results";
       resultFileName = `${extractor.fileName}_diff_${version}_vs_${versionAfter}`;
     }
 
