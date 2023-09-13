@@ -79,7 +79,7 @@ const informationPostOp = (standardRules, axeVersion) => {
   const title = `# Issues`;
   const tableOfContents =
     `## Table Of Contents\n` +
-    filteredStandards
+    [conformanceCoveredTitle, ...filteredStandards]
       .map((val, idx) => `${idx + 1}. ${formatMarkdownLinkToSection(val)}`)
       .join("\n");
 
@@ -116,7 +116,7 @@ const informationPostOp = (standardRules, axeVersion) => {
         .map((c) => [c]),
     ]);
 
-  const markdown = [title, tableOfContents, tables].join("\n\n");
+  const markdown = [title, tableOfContents, conformances, tables].join("\n\n");
 
   writeDataToFile(
     "results",
