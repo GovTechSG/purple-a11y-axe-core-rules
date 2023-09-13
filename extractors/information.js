@@ -67,25 +67,26 @@ const informationPostOp = (standardRules, axeVersion) => {
   // group and format markdown here
   // 1. sort into sections
   const escapeHTMLMarkdown = (val) => val.replace(/<([^>]+)>/g, "`<$1>`");
+  const formatMarkdownLinkToSection = (val) =>
+    `[${val}](#${val.replaceAll(" ", "-").replaceAll(".", "").toLowerCase()})`;
+
   const filteredStandards = Object.values(STANDARDS).filter(
     (standard) => standardRules[standard]
   );
+
+  const conformanceSet = new Set();
+  const conformanceCoveredTitle = "Conformance Covered";
   const title = `# Issues`;
   const tableOfContents =
     `## Table Of Contents\n` +
     filteredStandards
-      .map(
-        (standard, idx) =>
-          `${idx + 1}. [${standard}](#${standard
-            .replaceAll(" ", "-")
-            .replaceAll(".", "")
-            .toLowerCase()})`
-      )
+      .map((val, idx) => `${idx + 1}. ${formatMarkdownLinkToSection(val)}`)
       .join("\n");
+
   const tables = filteredStandards
     .map((standard) => {
       const headers = ["Issue ID", "Issue Description", "Severity"];
-      if (standard != STANDARDS["best-practice"]) {
+      if (standard !== STANDARDS["best-practice"]) {
         headers.push("Conformance");
       }
       const result = [headers];
@@ -97,6 +98,7 @@ const informationPostOp = (standardRules, axeVersion) => {
         ];
         if (rule.conformance) {
           ruleInfo.push(rule.conformance.join(", "));
+          rule.conformance.forEach((c) => conformanceSet.add(c));
         }
         result.push(ruleInfo);
       });
@@ -105,9 +107,23 @@ const informationPostOp = (standardRules, axeVersion) => {
     })
     .join("\n\n");
 
+  const conformances =
+    `## ${conformanceCoveredTitle}\n` +
+    markdownTable([
+      ["Conformance"],
+      ...Array.from(conformanceSet)
+        .sort()
+        .map((c) => [c]),
+    ]);
+
   const markdown = [title, tableOfContents, tables].join("\n\n");
 
-  writeDataToFile("results", `information_issues_${axeVersion}`, ".md", markdown);
+  writeDataToFile(
+    "results",
+    `information_issues_${axeVersion}`,
+    ".md",
+    markdown
+  );
 
   // return back the same object given to be written to json
   return standardRules;
