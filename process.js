@@ -37,18 +37,31 @@ const process = async (
   });
 
   const libPath = path.join(axeCoreDirPath, "lib");
-  const checksFilePaths = extractFileNames(path.join(libPath, "checks"));
-  const processedChecks = reducePaths(checksFilePaths, checkReducer, checkAcc);
 
-  const rulesFilePaths = extractFileNames(path.join(libPath, "rules"));
-  const rules = reducePaths(
-    rulesFilePaths,
-    ruleReducer(processedChecks),
-    ruleAcc
-  );
+  let processedChecks = {};
+  if (checkReducer) {
+    const checksFilePaths = extractFileNames(path.join(libPath, "checks"));
+    processedChecks = reducePaths(
+      checksFilePaths,
+      checkReducer,
+      checkAcc || {}
+    );
+  }
+
+  let processedRules = {};
+  if (ruleReducer) {
+    const rulesFilePaths = extractFileNames(path.join(libPath, "rules"));
+    processedRules = reducePaths(
+      rulesFilePaths,
+      ruleReducer(processedChecks),
+      ruleAcc || {}
+    );
+  } else {
+    processedRules = processedChecks;
+  }
 
   // necessary to stringify and parse because the IDs have invalid characters
-  return { data: JSON.parse(JSON.stringify(rules)) };
+  return { data: JSON.parse(JSON.stringify(processedRules)) };
 };
 
 export default process;
