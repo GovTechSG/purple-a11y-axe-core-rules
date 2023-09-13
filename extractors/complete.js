@@ -1,26 +1,39 @@
+/*
+  *******************
+  Complete Extractor
+  *******************
+  The goal is to extract information from rules to assess impacts of version upgrades.
+
+  All rules are to be extracted along with the check ids in all/any/none.
+
+  Note: Enabled (false) and Experimental rules are still extracted but indicated respectively.
+        These rules are not run by default.
+
+        reviewOnFail is also extracted to indicate rules that return as "Needs Review" on failure
+*/
 const completeFileName = "complete_rules";
 
-const completeChecksReducer = (acc, _data) => {
-  return acc;
-};
+const completeRulesReducer = () => (acc, ruleData) => {
+  const { all, any, none, reviewOnFail, enabled, tags, metadata } = ruleData;
 
-const completeRulesReducer = (_completeChecks) => (acc, data) => {
-  const ruleInfo = {
-    rule_id: data.id,
-    all: data.all,
-    any: data.any,
-    none: data.none,
+  let ruleInfo = {
+    rule_id: ruleData.id,
+    description: metadata.description,
+    enabled,
+    experimental: tags.includes("experimental") || undefined,
+    reviewOnFail,
+    all,
+    any,
+    none,
   };
 
-  acc[data.id] = ruleInfo;
+  acc[ruleData.id] = ruleInfo;
 
   return acc;
 };
 
 const completeExtractor = {
   fileName: completeFileName,
-  checkReducer: completeChecksReducer,
-  checkAcc: {},
   ruleReducer: completeRulesReducer,
   ruleAcc: {},
 };
