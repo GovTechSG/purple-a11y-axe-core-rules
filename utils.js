@@ -40,7 +40,7 @@ export const jsonDiff = ({
   versionAfter: v2,
   dataAfter: o2,
 }) => {
-  const result = {};
+  let result = {};
   const beforeKeys = Object.keys(o1);
   const afterKeys = Object.keys(o2);
 
@@ -62,9 +62,13 @@ export const jsonDiff = ({
     }
   });
 
-  console.log(
-    `DIFF STATS [before: ${v1}] [after: ${v2}]\nrules removed: ${keysRemoved.length} || rules added: ${keysAdded.length} || rules updated: ${keysUpdated}`
-  );
+  const summary = `[before: ${v1}] [after: ${v2}] removed: ${keysRemoved.length} || added: ${keysAdded.length} || updated: ${keysUpdated}`;
+  console.log(`DIFF SUMMARY: ${summary}`);
+
+  result = {
+    summary,
+    ...result,
+  };
 
   return result;
 };
