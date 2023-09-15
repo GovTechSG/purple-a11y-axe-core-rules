@@ -74,3 +74,29 @@ export const jsonDiff = ({
 
   return result;
 };
+
+export const extractFileNames = (dir) => {
+  const files = fs.readdirSync(dir);
+
+  return files.flatMap((file) => {
+    const filePath = path.join(dir, file);
+    if (fs.statSync(filePath).isDirectory()) {
+      return extractFileNames(filePath);
+    }
+
+    return filePath;
+  });
+};
+
+export const reducePaths = (filePaths, fileType, reducer, acc) =>
+  filePaths
+    .filter((file) => _.endsWith(file, fileType))
+    .map((file) => {
+      const fileContents = fs.readFileSync(file);
+      if (fileType === ".json") {
+        return JSON.parse(fileContents);
+      }
+
+      return fileContents.toString();
+    })
+    .reduce(reducer, acc);
