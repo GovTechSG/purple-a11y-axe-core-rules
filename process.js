@@ -1,28 +1,9 @@
 import _ from "lodash";
 import path from "path";
-import fs from "fs";
 import { simpleGit } from "simple-git";
+import { extractFileNames, reducePaths } from "./utils.js";
 
-const axeCoreDirPath = "axe-core";
-
-const extractFileNames = (dir) => {
-  const files = fs.readdirSync(dir);
-
-  return files.flatMap((file) => {
-    const filePath = path.join(dir, file);
-    if (fs.statSync(filePath).isDirectory()) {
-      return extractFileNames(filePath);
-    }
-
-    return filePath;
-  });
-};
-
-const reducePaths = (filePaths, reducer, acc) =>
-  filePaths
-    .filter((file) => _.endsWith(file, ".json"))
-    .map((file) => JSON.parse(fs.readFileSync(file)))
-    .reduce(reducer, acc);
+export const axeCoreDirPath = "axe-core";
 
 const process = async (
   axeVersion,
@@ -43,6 +24,7 @@ const process = async (
     const checksFilePaths = extractFileNames(path.join(libPath, "checks"));
     processedChecks = reducePaths(
       checksFilePaths,
+      ".json",
       checkReducer,
       checkAcc || {}
     );
@@ -53,6 +35,7 @@ const process = async (
     const rulesFilePaths = extractFileNames(path.join(libPath, "rules"));
     processedRules = reducePaths(
       rulesFilePaths,
+      ".json",
       ruleReducer(processedChecks),
       ruleAcc || {}
     );
